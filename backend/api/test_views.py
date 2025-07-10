@@ -6,7 +6,6 @@ import sys
 import django
 from django.conf import settings
 from django.db import connection
-import psycopg2
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
