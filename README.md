@@ -79,6 +79,24 @@ O frontend estará disponível em: http://localhost:5173
 
 O projeto está configurado para usar PostgreSQL hospedado no Render. As configurações estão em `backend/core/settings.py`.
 
+## Deploy no Render
+
+O projeto está preparado para deploy no Render com:
+
+### Backend:
+- `requirements.txt` com todas as dependências Python
+- Configuração PostgreSQL pronta
+- CORS configurado para produção
+
+### Dependências Python (requirements.txt):
+```
+Django==5.2.4
+djangorestframework==3.16.0
+django-cors-headers==4.7.0
+djangorestframework-simplejwt==5.5.0
+psycopg2-binary==2.9.10
+```
+
 ## Credenciais de Administração
 
 - **Username:** Raul
