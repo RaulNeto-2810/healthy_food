@@ -5,20 +5,17 @@ import './App.css'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
-  const [apiStatus, setApiStatus] = useState(null)
   const [healthyFoods, setHealthyFoods] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [testData, setTestData] = useState('')
-  const [testResponse, setTestResponse] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Verificar status da API ao carregar o componente
   useEffect(() => {
     const checkApiConnection = async () => {
       try {
         setLoading(true)
-        const statusResponse = await apiService.checkStatus()
-        setApiStatus(statusResponse)
+        await apiService.checkStatus()
         
         const foodsResponse = await apiService.getHealthyFoods()
         setHealthyFoods(foodsResponse.foods)
@@ -35,19 +32,6 @@ function App() {
     checkApiConnection()
   }, [])
 
-  // Testar conexão POST
-  const handleTestConnection = async () => {
-    try {
-      const response = await apiService.testConnection({
-        message: testData,
-        timestamp: new Date().toISOString()
-      })
-      setTestResponse(response)
-    } catch (err) {
-      setTestResponse({ error: err.message })
-    }
-  }
-
   // Renderizar página atual
   const renderCurrentPage = () => {
     switch (currentPage) {
@@ -61,150 +45,200 @@ function App() {
   // Página principal
   const renderHomePage = () => (
     <>
-      {/* Status da API */}
-      <div className="card mb-4">
-        <div className="card-header">
-          <h5 className="mb-0">
-            <i className="bi bi-wifi me-2"></i>
-            Status da Conexão
-          </h5>
-        </div>
-        <div className="card-body">
-          {loading ? (
-            <div className="d-flex align-items-center">
-              <div className="spinner-border spinner-border-sm me-2" role="status">
-                <span className="visually-hidden">Carregando...</span>
-              </div>
-              Verificando conexão...
-            </div>
-          ) : error ? (
-            <div className="alert alert-danger mb-0">
-              <i className="bi bi-exclamation-triangle me-2"></i>
-              {error}
-            </div>
-          ) : (
-            <div className="alert alert-success mb-0">
-              <i className="bi bi-check-circle me-2"></i>
-              {apiStatus?.message} (v{apiStatus?.version})
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Lista de Comidas Saudáveis */}
-      {!loading && !error && (
-        <div className="card mb-4">
-          <div className="card-header">
-            <h5 className="mb-0">
-              <i className="bi bi-list-ul me-2"></i>
-              Comidas Saudáveis ({healthyFoods.length})
-            </h5>
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="hero-content">
+          <h1 className="hero-title">Healthy Food</h1>
+          <p className="hero-subtitle">Descubra o poder da alimentação saudável</p>
+          <p className="hero-description">
+            Transforme sua vida com escolhas alimentares nutritivas e deliciosas. 
+            Explore nossos conteúdos sobre nutrição, receitas e dicas para uma vida mais saudável.
+          </p>
+          <div className="hero-buttons">
+            <button className="btn btn-primary">
+              <i className="bi bi-play-circle me-2"></i>
+              Começar Agora
+            </button>
+            <button className="btn btn-outline">
+              <i className="bi bi-book me-2"></i>
+              Saiba Mais
+            </button>
           </div>
-          <div className="card-body">
-            <div className="row">
-              {healthyFoods.map((food) => (
-                <div key={food.id} className="col-md-6 mb-3">
-                  <div className="card h-100">
-                    <div className="card-body">
-                      <h6 className="card-title">
-                        {food.nome}
-                        <span className="badge bg-primary ms-2">{food.categoria}</span>
-                      </h6>
-                      <p className="card-text">{food.beneficios}</p>
-                      <small className="text-muted">
-                        <i className="bi bi-lightning me-1"></i>
-                        {food.calorias} calorias
-                      </small>
-                    </div>
+        </div>
+        <div className="hero-image">
+          <div className="hero-card">
+            <i className="bi bi-heart-pulse hero-icon"></i>
+            <h3>Vida Saudável</h3>
+            <p>Alimente-se bem, viva melhor</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="features">
+        <div className="container">
+          <h2 className="section-title">Por que escolher alimentação saudável?</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="bi bi-heart-fill"></i>
+              </div>
+              <h3>Saúde do Coração</h3>
+              <p>Alimentos ricos em nutrientes que fortalecem o sistema cardiovascular</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="bi bi-lightning-charge-fill"></i>
+              </div>
+              <h3>Mais Energia</h3>
+              <p>Combustível natural para seu corpo funcionar no máximo desempenho</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="bi bi-shield-check"></i>
+              </div>
+              <h3>Imunidade</h3>
+              <p>Fortaleça suas defesas naturais com vitaminas e minerais essenciais</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="bi bi-flower1"></i>
+              </div>
+              <h3>Bem-estar</h3>
+              <p>Sinta-se bem por dentro e por fora com uma alimentação equilibrada</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Healthy Foods Section */}
+      {!loading && !error && healthyFoods.length > 0 && (
+        <section className="healthy-foods">
+          <div className="container">
+            <h2 className="section-title">Alimentos Recomendados</h2>
+            <div className="foods-grid">
+              {healthyFoods.slice(0, 6).map((food) => (
+                <div key={food.id} className="food-card">
+                  <div className="food-category">{food.categoria}</div>
+                  <h3 className="food-name">{food.nome}</h3>
+                  <p className="food-benefits">{food.beneficios}</p>
+                  <div className="food-calories">
+                    <i className="bi bi-lightning me-1"></i>
+                    {food.calorias} cal
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Teste de Conexão POST */}
-      {!loading && !error && (
-        <div className="card">
-          <div className="card-header">
-            <h5 className="mb-0">
-              <i className="bi bi-send me-2"></i>
-              Testar Conexão POST
-            </h5>
-          </div>
-          <div className="card-body">
-            <div className="mb-3">
-              <label htmlFor="testInput" className="form-label">
-                Mensagem de teste:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="testInput"
-                value={testData}
-                onChange={(e) => setTestData(e.target.value)}
-                placeholder="Digite uma mensagem para testar..."
-              />
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={handleTestConnection}
-              disabled={!testData.trim()}
-            >
-              <i className="bi bi-send me-2"></i>
-              Enviar Teste
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Pronto para começar sua jornada saudável?</h2>
+            <p>Junte-se a milhares de pessoas que já transformaram suas vidas</p>
+            <button className="btn btn-primary btn-lg">
+              <i className="bi bi-rocket me-2"></i>
+              Começar Agora
             </button>
-            
-            {testResponse && (
-              <div className="mt-3">
-                <h6>Resposta do servidor:</h6>
-                <pre className="bg-light p-3 rounded">
-                  {JSON.stringify(testResponse, null, 2)}
-                </pre>
-              </div>
-            )}
           </div>
         </div>
-      )}
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-section">
+              <h4>
+                <i className="bi bi-heart-fill text-success me-2"></i>
+                Healthy Food
+              </h4>
+              <p>Sua jornada para uma vida mais saudável começa aqui.</p>
+            </div>
+            <div className="footer-section">
+              <h5>Links Úteis</h5>
+              <ul>
+                <li><a href="#sobre">Sobre Nós</a></li>
+                <li><a href="#receitas">Receitas</a></li>
+                <li><a href="#dicas">Dicas</a></li>
+                <li><a href="#contato">Contato</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h5>Redes Sociais</h5>
+              <div className="social-links">
+                <a href="#" className="social-link">
+                  <i className="bi bi-facebook"></i>
+                </a>
+                <a href="#" className="social-link">
+                  <i className="bi bi-instagram"></i>
+                </a>
+                <a href="#" className="social-link">
+                  <i className="bi bi-twitter"></i>
+                </a>
+                <a href="#" className="social-link">
+                  <i className="bi bi-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>&copy; 2025 Healthy Food. Todos os direitos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </>
   )
 
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col-12">
-          {/* Header com navegação */}
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="text-center mb-0">
-              <i className="bi bi-heart-fill text-success me-2"></i>
-              Healthy Food
-            </h1>
-            
-            <div className="btn-group" role="group">
-              <button
-                type="button"
-                className={`btn ${currentPage === 'home' ? 'btn-primary' : 'btn-outline-primary'}`}
-                onClick={() => setCurrentPage('home')}
-              >
-                <i className="bi bi-house me-2"></i>
-                Início
-              </button>
-              <button
-                type="button"
-                className={`btn ${currentPage === 'render-test' ? 'btn-primary' : 'btn-outline-primary'}`}
-                onClick={() => setCurrentPage('render-test')}
-              >
-                <i className="bi bi-cloud-check me-2"></i>
-                Teste Render
-              </button>
-            </div>
+    <div className="app">
+      {/* Navigation */}
+      <nav className="navbar">
+        <div className="nav-container">
+          <div className="nav-logo">
+            <i className="bi bi-heart-fill text-success me-2"></i>
+            <span>Healthy Food</span>
           </div>
           
-          {/* Conteúdo da página atual */}
-          {renderCurrentPage()}
+          <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+            <button
+              className={`nav-link ${currentPage === 'home' ? 'active' : ''}`}
+              onClick={() => {
+                setCurrentPage('home')
+                setIsMenuOpen(false)
+              }}
+            >
+              <i className="bi bi-house me-2"></i>
+              Início
+            </button>
+            <button
+              className={`nav-link ${currentPage === 'render-test' ? 'active' : ''}`}
+              onClick={() => {
+                setCurrentPage('render-test')
+                setIsMenuOpen(false)
+              }}
+            >
+              <i className="bi bi-cloud-check me-2"></i>
+              Teste API
+            </button>
+          </div>
+
+          <button
+            className="nav-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <i className={`bi ${isMenuOpen ? 'bi-x' : 'bi-list'}`}></i>
+          </button>
         </div>
-      </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="main-content">
+        {renderCurrentPage()}
+      </main>
     </div>
   )
 }
