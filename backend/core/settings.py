@@ -19,6 +19,10 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+# Permitir todos os hosts em produção se especificado
+if os.environ.get('ALLOWED_HOSTS') == '*':
+    ALLOWED_HOSTS = ['*']
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,14 +70,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'healthy_food',
-        'USER': 'healthy_food_user',
-        'PASSWORD': '1TAvawTdGecODtT4IOCfTpmEeZfzkFNC',
-        'HOST': 'dpg-d1j07c95pdvs73ckgsv0-a.ohio-postgres.render.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=f'postgresql://healthy_food_user:1TAvawTdGecODtT4IOCfTpmEeZfzkFNC@dpg-d1j07c95pdvs73ckgsv0-a.ohio-postgres.render.com:5432/healthy_food',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
@@ -108,10 +109,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS configuration
-CORS_ALLOW_ALL_ORIGINS = True  # Apenas para desenvolvimento
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # Apenas para desenvolvimento
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Frontend Vite default port
+    "https://healthy-food-frontend.onrender.com",  # Frontend em produção
 ]
+
+# Se estiver em produção, adicionar origens dinâmicas
+if not DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
 
 # REST Framework settings
 REST_FRAMEWORK = {
