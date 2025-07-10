@@ -1,4 +1,4 @@
-# Healthy Food Project
+# Healthy Food
 
 Projeto de aplicação web para comidas saudáveis com React (frontend) e Django (backend).
 
