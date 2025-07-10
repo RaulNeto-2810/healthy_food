@@ -1,81 +1,118 @@
-# Healthy Foods - Guia de Instalação
+# Healthy Food Project
 
-Este guia explica como configurar e executar tanto o backend quanto o frontend do projeto Healthy Foods.
+Projeto de aplicação web para comidas saudáveis com React (frontend) e Django (backend).
 
-## Backend (Django)
+## Estrutura do Projeto
 
-### Pré-requisitos
-- Python 3.x instalado
-- pip (gerenciador de pacotes Python)
+```
+/
+├── frontend/          # Aplicação React com Bootstrap
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+└── backend/           # API Django REST Framework
+    ├── api/           # App Django principal
+    ├── core/          # Configurações do Django
+    ├── venv/          # Ambiente virtual Python
+    └── manage.py
+```
 
-### Passos de Instalação
+## Tecnologias Utilizadas
 
-1. Navegue até o diretório do backend:
+### Frontend
+- React 18
+- Vite (build tool)
+- Bootstrap 5
+- JavaScript
+
+### Backend
+- Django 5.2
+- Django REST Framework
+- PostgreSQL (Render)
+- JWT Authentication
+
+## Como Executar
+
+### Backend
+
+1. Navegue até a pasta backend:
 ```bash
 cd backend
 ```
 
-2. Crie um ambiente virtual (venv):
+2. Ative o ambiente virtual:
 ```bash
-python -m venv venv
-```
+# Windows
+.\venv\Scripts\activate
 
-3. Ative o ambiente virtual:
-- Windows:
-```bash
-venv\Scripts\activate
-```
-- Linux/Mac:
-```bash
+# Linux/Mac
 source venv/bin/activate
 ```
 
-4. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
-
-5. Execute as migrações do banco de dados:
-```bash
-python manage.py migrate
-```
-
-6. Inicie o servidor:
+3. Execute o servidor:
 ```bash
 python manage.py runserver
 ```
 
-O backend estará disponível em `http://localhost:8000`
+O backend estará disponível em:
+- API: http://localhost:8000/api/
+- Admin: http://localhost:8000/admin/
+- Autenticação: http://localhost:8000/api/token/
 
-## Frontend (React + Vite)
+### Frontend
 
-### Pré-requisitos
-- Node.js instalado (versão LTS recomendada)
-- npm (gerenciador de pacotes Node.js)
-
-### Passos de Instalação
-
-1. Navegue até o diretório do frontend:
+1. Navegue até a pasta frontend:
 ```bash
-cd frontend/healthy-food
+cd frontend
 ```
 
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. Inicie o servidor de desenvolvimento:
+2. Execute o servidor de desenvolvimento:
 ```bash
 npm run dev
 ```
 
-O frontend estará disponível em `http://localhost:5173`
+O frontend estará disponível em: http://localhost:5173
 
-## Executando o Projeto Completo
+## Configuração do Banco de Dados
 
-1. Em um terminal, inicie o backend conforme os passos acima
-2. Em outro terminal, inicie o frontend conforme os passos acima
-3. Acesse `http://localhost:5173` no seu navegador para usar a aplicação
+O projeto está configurado para usar PostgreSQL hospedado no Render. As configurações estão em `backend/core/settings.py`.
 
-**Nota**: Certifique-se de manter tanto o backend quanto o frontend em execução simultaneamente para o funcionamento completo da aplicação.
+## Credenciais de Administração
+
+- **Username:** Raul
+- **Email:** iftm.raul@gmail.com
+- **Senha:** (configurada durante a criação)
+
+## Testando a Conexão Frontend-Backend
+
+O projeto inclui uma demonstração funcional da conexão entre frontend e backend:
+
+### Endpoints da API disponíveis:
+- `GET /api/status/` - Status da API
+- `GET /api/healthy-foods/` - Lista de comidas saudáveis
+- `POST /api/test-connection/` - Teste de conexão POST
+- `POST /api/token/` - Autenticação JWT
+
+### Interface de Teste:
+O frontend inclui uma interface completa para testar:
+- ✅ Verificação automática de conexão
+- ✅ Exibição de dados da API
+- ✅ Teste de requisições POST
+- ✅ Tratamento de erros
+- ✅ Interface Bootstrap responsiva
+
+### Para testar:
+1. Inicie o backend: `python manage.py runserver`
+2. Inicie o frontend: `npm run dev`
+3. Acesse http://localhost:5173
+4. A página mostrará automaticamente se a conexão está funcionando
+
+## Próximos Passos
+
+1. Desenvolver modelos do Django (models.py)
+2. Criar serializers e views da API
+3. Implementar componentes React
+4. Configurar roteamento do frontend
+5. Implementar autenticação no frontend
